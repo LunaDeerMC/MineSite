@@ -1,0 +1,11 @@
+{
+  "welcome": "欢迎",
+  "admin": {
+    "title": "管理后台",
+    "pages": "页面管理",
+    "create": "创建页面",
+    "edit": "编辑页面",
+    "publish": "发布",
+    "draft": "草稿"
+  }
+}

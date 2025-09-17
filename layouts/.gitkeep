@@ -1,0 +1,9 @@
+# Layouts Directory
+
+此目录用于存放 Nuxt 布局文件。
+
+## 示例布局
+
+- `default.vue` - 默认布局
+- `admin.vue` - 管理后台专用布局
+- `blog.vue` - 博客页面布局
