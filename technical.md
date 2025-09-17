@@ -2,6 +2,49 @@
 
 本项目以前后端一体的 Nuxt 3 为核心，围绕内容展示与后台管理的场景进行构建。选用组件如下：Vue、Nuxt 3、Naive UI、Tailwind CSS、Tiptap、Prisma、PostgreSQL、Resend、@nuxtjs/i18n。
 
+## 项目目录结构
+
+```
+MineSite/
+├── assets/
+│   └── css/                 # 样式文件
+│       ├── main.css         # 主样式文件
+│       └── tailwind.css     # Tailwind CSS 配置
+├── components/
+│   └── ui/                  # UI 组件
+│       └── TiptapEditor.vue # Tiptap 编辑器组件
+├── composables/             # Vue 组合式函数
+├── layouts/                 # 布局文件
+├── locales/                 # 国际化文件
+│   ├── en.json              # 英文翻译
+│   └── zh.json              # 中文翻译
+├── middleware/              # 中间件
+│   └── admin.ts             # 管理后台访问控制
+├── pages/                   # 页面文件（自动路由）
+│   ├── admin/               # 管理后台页面
+│   │   └── index.vue        # 后台首页
+│   ├── index.vue            # 首页
+│   └── [slug].vue           # 动态页面路由
+├── plugins/                 # 插件
+│   └── naive-ui.client.ts   # Naive UI 插件配置
+├── prisma/                  # 数据库相关
+│   └── schema.prisma        # Prisma 数据模型
+├── public/                  # 静态资源
+├── server/
+│   └── api/                 # 服务端 API
+│       └── pages/           # 页面相关 API
+│           ├── index.ts     # 页面列表和创建
+│           └── [slug].ts    # 单页面 CRUD
+├── utils/                   # 工具函数
+│   ├── prisma.ts            # Prisma 客户端配置
+│   └── resend.ts            # Resend 邮件服务
+├── .env.example             # 环境变量示例
+├── i18n.config.ts           # 国际化配置
+├── nuxt.config.ts           # Nuxt 3 配置
+├── tailwind.config.js       # Tailwind CSS 配置
+└── technical.md             # 技术栈说明文档
+```
+
 ## 组件清单与作用
 
 | 组件 | 角色定位 | 在项目中的作用 | 备注/整合点 |
@@ -63,13 +106,63 @@
 
 ## 开发与部署流程（简版）
 
-- 开发
-  - 建模：定义 Prisma schema 并迁移
-  - 后台：Naive UI + Tiptap 完成编辑页
-  - API：server/api/pages/** 完成 CRUD/发布/版本
-  - i18n：配置 locales 与路由策略，完善内容模型的多语言字段
-- 测试/发布
-  - 单元与端到端测试可用 Vitest/Playwright（可选）
-  - CI：安装依赖 → 构建 → prisma migrate deploy → 部署（Vercel/自托管 Node）
-  - 发布后调用 nitro 的 revalidate 逻辑或触发前台路径重算
+### 环境准备
+
+1. **系统要求**
+   - Node.js 18+
+   - PostgreSQL 数据库
+   - npm 或 yarn 包管理器
+
+2. **项目安装**
+   ```bash
+   # 克隆项目
+   git clone <repository-url>
+   cd MineSite
+
+   # 安装依赖
+   npm install
+
+   # 复制环境变量配置
+   cp .env.example .env
+   ```
+
+3. **环境配置**
+   编辑 `.env` 文件，配置以下变量：
+   ```env
+   DATABASE_URL="postgres://user:password@localhost:5432/minesite"
+   NUXT_PRIVATE_RESEND_API_KEY="your-resend-api-key"
+   NUXT_PUBLIC_SITE_URL="http://localhost:3000"
+   NUXT_I18N_DEFAULT_LOCALE="zh"
+   NUXT_I18N_LOCALES="zh,en"
+   ```
+
+4. **数据库初始化**
+   ```bash
+   # 生成 Prisma 客户端
+   npx prisma generate
+
+   # 运行数据库迁移
+   npx prisma migrate dev --name init
+
+   # （可选）查看数据库
+   npx prisma studio
+   ```
+
+5. **启动开发服务器**
+   ```bash
+   npm run dev
+   ```
+
+### 开发流程
+
+- **建模**：定义 Prisma schema 并迁移
+- **后台**：Naive UI + Tiptap 完成编辑页
+- **API**：server/api/pages/** 完成 CRUD/发布/版本
+- **i18n**：配置 locales 与路由策略，完善内容模型的多语言字段
+
+### 测试/发布
+
+- **单元与端到端测试**可用 Vitest/Playwright（可选）
+- **CI**：安装依赖 → 构建 → prisma migrate deploy → 部署（Vercel/自托管 Node）
+- **发布后**调用 nitro 的 revalidate 逻辑或触发前台路径重算
 

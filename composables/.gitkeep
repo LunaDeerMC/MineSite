@@ -1,0 +1,9 @@
+# Composables Directory
+
+此目录用于存放 Vue 3 组合式函数（Composables）。
+
+## 示例组合函数
+
+- `useAuth.ts` - 用户认证相关
+- `usePages.ts` - 页面管理相关
+- `useBlocks.ts` - 区块内容相关

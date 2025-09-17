@@ -1,0 +1,11 @@
+{
+  "welcome": "Welcome",
+  "admin": {
+    "title": "Admin Dashboard",
+    "pages": "Page Management",
+    "create": "Create Page",
+    "edit": "Edit Page",
+    "publish": "Publish",
+    "draft": "Draft"
+  }
+}

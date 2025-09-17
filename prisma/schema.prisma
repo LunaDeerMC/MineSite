@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Page {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  titleEn     String?
+  status      String   @default("draft") // draft, published, archived
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  blocks      Block[]
+  revisions   Revision[]
+  
+  @@map("pages")
+}
+
+model Block {
+  id     String @id @default(cuid())
+  pageId String
+  type   String // hero, rich_text, gallery, etc.
+  order  Int
+  data   Json   // JSONB field for flexible block data
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  
+  @@map("blocks")
+}
+
+model Revision {
+  id        String   @id @default(cuid())
+  pageId    String
+  title     String
+  titleEn   String?
+  blocks    Json     // Snapshot of blocks at revision time
+  createdAt DateTime @default(now())
+  
+  // Relations
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  
+  @@map("revisions")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      String   @default("user") // user, admin
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("users")
+}
